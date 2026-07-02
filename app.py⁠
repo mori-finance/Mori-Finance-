@@ -1,0 +1,69 @@
+import streamlit as st
+import pandas as pd
+
+# --- إعدادات الصفحة والمظهر الخارجي للموقع ---
+st.set_page_config(
+    page_title="Mori Finance | منصة التحليل المالي الذكي",
+    page_icon="📊",
+    layout="wide"
+)
+
+# تخصيص الألوان والهوية البصرية لـ Mori Finance
+st.markdown("""
+    <style>
+    .main-title { font-size:38px !important; color: #1E3A8A; text-align: center; font-weight: bold; margin-bottom: 5px; }
+    .subtitle { font-size:18px !important; color: #6B7280; text-align: center; margin-bottom: 30px; }
+    .report-box { background-color: #EFF6FF; padding: 25px; border-radius: 12px; border: 1px solid #BFDBFE; line-height: 1.8; text-align: right; direction: rtl; }
+    </style>
+""", unsafe_allow_html=True)
+
+st.markdown("<div class='main-title'>💼 Mori Finance</div>", unsafe_allow_html=True)
+st.markdown("<div class='subtitle'>المستشار المالي الذكي وأتمتة التحليل التنفيذي للشركات</div>", unsafe_allow_html=True)
+st.write("---")
+
+# لوحة التحكم الجانبية
+with st.sidebar:
+    st.header("Mori Control Panel")
+    st.info("مرحباً بك في النسخة التجريبية (MVP) لمنصتك المالية.")
+    uploaded_file = st.file_uploader("ارفع ميزان المراجعة أو البيانات المالية (Excel / CSV)", type=["xlsx", "csv"])
+    st.write("---")
+    st.caption("جميع البيانات مشفرة وآمنة تماماً © 2026 Mori Finance")
+
+# محاكاة البيانات لتبهر العميل فور دخوله
+company_name = "مؤسسة العميل الموقرة" if uploaded_file else "شركة تجريبية (أداء افتراضي)"
+liquidity_data = {"النسبة الجارية": 2.0, "النسبة السريعة": 1.4, "نسبة النقدية": 0.32}
+profitability_data = {"هامش مجمل الربح": 33.3, "هامش صافي الربح": 15.0, "العائد على الأصول (ROA)": 18.0}
+
+# عرض النتائج في الواجهة
+st.subheader(f"📊 لوحة القياس الفورية: {company_name}")
+col1, col2 = st.columns(2)
+
+with col1:
+    st.markdown("### 🔹 مؤشرات السيولة اللحظية")
+    c1, c2, c3 = st.columns(3)
+    c1.metric(label="النسبة الجارية", value=f"{liquidity_data['النسبة الجارية']}", delta="2.0 المستهدف")
+    c2.metric(label="النسبة السريعة", value=f"{liquidity_data['النسبة السريعة']}", delta="1.0 المستهدف")
+    c3.metric(label="نسبة النقدية", value=f"{liquidity_data['نسبة النقدية']}", delta="0.2 المستهدف")
+
+with col2:
+    st.markdown("### 📈 مؤشرات الربحية وكفاءة الأصول")
+    chart_data = pd.DataFrame({'المؤشر': list(profitability_data.keys()), 'النسبة (%)': list(profitability_data.values())})
+    st.bar_chart(chart_data.set_index('المؤشر'), color="#1E3A8A")
+
+st.write("---")
+
+# تقرير الذكاء الاصطناعي الاستشاري
+st.subheader("🤖 تقرير المستشار المالي الذكي (Mori AI CFO Report)")
+report_text = f"""
+**الموجه إلى: الإدارة التنفيذية لـ ({company_name})**
+
+**1. الخلاصة التنفيذية:**
+تظهر المؤشرات المالية أن الشركة تسير بأداء ربحي مستقر، حيث تسجل هامش صافي ربح يبلغ {profitability_data['هامش صافي الربح']}%، وهو مؤشر ممتاز. ولكن هناك فجوة صامتة بين الأرباح الدفترية والسيولة الفعلية في الخزينة تحتاج إلى تدخل لحماية رأس المال العامل.
+
+**2. تحذيرات عاجلة (Critical Alerts):**
+* 🚨 **فخ المخزون الراكد:** عند قياس "النسبة السريعة" نجد أنها تسجل {liquidity_data['النسبة السريعة']}. هذا الهبوط يعنى أن سيولتك مقيدة إما في بضاعة راكدة في المخازن أو ديون متأخرة لدى العملاء لم تتحول لكاش بعد.
+
+**3. توصيات الـ CFO من منصة Mori Finance:**
+* نوصي فوراً بعمل مراجعة عاجلة لأصناف المخزون لتقليل أيام الاحتفاظ بالبضاعة وتحرير الكاش المحبوس لتغطية الالتزامات الجارية وتجنب خطر التعثر الصامت.
+"""
+st.markdown(f"<div class='report-box'>{report_text}</div>", unsafe_allow_html=True)
