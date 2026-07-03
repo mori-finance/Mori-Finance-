@@ -1,34 +1,33 @@
 import streamlit as st
 import pandas as pd
 
+# 1. إعدادات الصفحة عشان تبان "موبايل فيرست" وشيك
 st.set_page_config(page_title="Mori Finance", layout="centered")
 
-st.title("💼 Mori Finance")
-st.write("المنصة الذكية للتحليل المالي")
+# 2. إضافة CSS عشان نلغي شكل "الابتدائي" ونعمل تصميم حديث (Dark/Modern)
+st.markdown("""
+    <style>
+    .main { background-color: #0e1117; }
+    .stApp { color: white; font-family: sans-serif; }
+    div.stButton > button { width: 100%; border-radius: 10px; border: 1px solid #4CAF50; color: #4CAF50; }
+    .big-font { font-size: 24px !important; font-weight: bold; color: #4CAF50; text-align: center; }
+    .card { background-color: #262730; padding: 20px; border-radius: 15px; margin-bottom: 20px; box-shadow: 2px 2px 10px rgba(0,0,0,0.5); }
+    </style>
+""", unsafe_allow_html=True)
 
-# رفع الملف
-uploaded_file = st.file_uploader("📂 ارفع ملف البيانات (Excel أو CSV)", type=['csv', 'xlsx'])
+# 3. الهيدر بشكل فخم
+st.markdown('<p class="big-font">MORI FINANCE</p>', unsafe_allow_html=True)
+st.markdown('<p style="text-align:center;">التحليل المالي الذكي للشركات</p>', unsafe_allow_html=True)
+st.write("---")
 
-if uploaded_file is not None:
-    # قراءة الملف
-    if uploaded_file.name.endswith('.csv'):
-        df = pd.read_csv(uploaded_file)
-    else:
-        df = pd.read_excel(uploaded_file)
-    
-    st.success("تم رفع الملف بنجاح!")
-    
-    # هنا بنحسب الأرقام من الملف نفسه (افترضنا وجود أعمدة باسم 'السيولة' و 'الربح')
-    # لو ملفك فيه أسماء أعمدة مختلفة، قولي عشان أعدلهالك
-    try:
-        col1, col2 = st.columns(2)
-        with col1:
-            st.metric(label="نسبة السيولة", value=f"{df['السيولة'].iloc[0]}")
-        with col2:
-            st.metric(label="نسبة الربحية", value=f"{df['الربح'].iloc[0]}%")
-    except:
-        st.warning("تأكد أن الملف يحتوي على أعمدة باسم 'السيولة' و 'الربح'")
+# 4. منطقة الرفع بشكل أنيق
+st.markdown('<div class="card">', unsafe_allow_html=True)
+uploaded_file = st.file_uploader("📂 اسحب ملف الإكسيل هنا", type=['csv', 'xlsx'])
+st.markdown('</div>', unsafe_allow_html=True)
+
+if uploaded_file:
+    df = pd.read_excel(uploaded_file) if uploaded_file.name.endswith('.xlsx') else pd.read_csv(uploaded_file)
+    st.success("✅ تم تحليل البيانات بنجاح")
+    st.dataframe(df.head(), use_container_width=True)
 else:
-    st.info("💡 في انتظار رفع الملف لعرض النتائج الحقيقية.")
-
-
+    st.info("💡 المنصة جاهزة لاستقبال بياناتك.")
